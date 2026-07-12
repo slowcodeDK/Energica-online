@@ -4,14 +4,13 @@ import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { defineSignals, record } from "./can/signals.ts";
 import { SIGNALS } from "./can/registry.ts";
-import { startCoolantSensors } from "./sensors/max31865.ts";
 import { bringUpCan, openChannel } from "./can/socket.ts";
 import { decodeFrame, STREAM_IDS } from "./can/decode.ts";
 import { initObd, isObdResponse, handleResponse, startObdPoller } from "./can/obd.ts";
 import { setupWs } from "./ws.ts";
 import type { RawChannel } from "socketcan";
 
-// Thin orchestrator: wire DB + coolant probes + CAN decode/OBD + HTTP/WS together.
+// Thin orchestrator: wire CAN decode/OBD + HTTP/WS together.
 // See obd-garage/INTEGRATION_PLAN.md.
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -20,20 +19,15 @@ const PORT = 8080;
 const CAN_IFACE = "can0";
 
 // Config (env overrides):
-//   CAN_ENABLED=0 → skip CAN entirely (coolant only)
+//   CAN_ENABLED=0 → skip CAN entirely
 //   OBD_ENABLED=0 → passive/listen-only: decode broadcasts but don't TX OBD polls
 const CAN_ENABLED = process.env.CAN_ENABLED !== "0";
 const OBD_ENABLED = process.env.OBD_ENABLED !== "0";
 
-// --- DB + signal registry ---
+// --- DB + signal registry ---// Thin orchestrator: wire DB + CAN decode/OBD + HTTP/WS together.
 defineSignals(SIGNALS);
 
-// --- Coolant probes (MAX31865) ---
-try {
-  await startCoolantSensors();
-} catch (err) {
-  console.error("coolant: init failed — continuing without coolant probes:", err);
-}
+// --- Coolant probes (MAX31865) DELETED ---
 
 // --- CAN: broadcast decode + OBD-II polling ---
 let channel: RawChannel | undefined;
@@ -74,7 +68,7 @@ if (CAN_ENABLED) {
       console.log("obd: disabled (OBD_ENABLED=0) — passive decode only");
     }
   } catch (err) {
-    console.error("can: init failed — continuing with coolant only:", err);
+    console.error("can: init failed — continuing without CAN:", err);
   }
 } else {
   console.log("can: disabled (CAN_ENABLED=0)");

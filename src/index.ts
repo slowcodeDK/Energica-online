@@ -18,7 +18,7 @@ import type { RawChannel } from "socketcan";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const PORT = 80;
+const PORT = 8080;
 const CAN_IFACE = "can0";
 
 // Config (env overrides):

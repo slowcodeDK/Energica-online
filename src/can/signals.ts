@@ -30,6 +30,7 @@ export interface LiveValue {
 const defs = new Map<string, SignalDef>();
 const liveState = new Map<string, LiveValue>();
 const lastLogged = new Map<string, number>();
+const LOGGING_ENABLED = process.env.LOGGING_ENABLED !== "0";
 
 // Event-driven push: the WS layer registers a listener and we hand it the signals
 // that changed (already rate-limited by the per-signal deadbands). Changes that
@@ -74,7 +75,9 @@ export function record(key: string, value: number, ts: number = Date.now()): voi
   const deadband = def?.deadband ?? 0;
   if (prev === undefined || Math.abs(value - prev) > deadband) {
     lastLogged.set(key, value);
-    recordReading(ts, key, value, unit, group, def?.source ?? "stream");
+    if (LOGGING_ENABLED) {
+  recordReading(ts, key, value, unit, group, def?.source ?? "stream");
+}
     notifyChange(key, { value, unit, group, ts });
   }
 }

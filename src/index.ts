@@ -2,8 +2,6 @@ import { createServer } from "http";
 import { readFile } from "fs/promises";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
-import { handleDbEndpoint } from "./db-endpoint.ts";
-import { initDb, closeDb } from "./db.ts";
 import { defineSignals, record } from "./can/signals.ts";
 import { SIGNALS } from "./can/registry.ts";
 import { startCoolantSensors } from "./sensors/max31865.ts";
@@ -28,7 +26,6 @@ const CAN_ENABLED = process.env.CAN_ENABLED !== "0";
 const OBD_ENABLED = process.env.OBD_ENABLED !== "0";
 
 // --- DB + signal registry ---
-initDb(join(ROOT, "temperatures.db"));
 defineSignals(SIGNALS);
 
 // --- Coolant probes (MAX31865) ---
@@ -85,13 +82,8 @@ if (CAN_ENABLED) {
 
 // --- HTTP + WebSocket server ---
 const indexHtml = await readFile(join(ROOT, "public", "index.html"), "utf-8");
-const dbPath = join(ROOT, "temperatures.db");
 
 const server = createServer(async (req, res) => {
-  if (req.url === "/db") {
-    await handleDbEndpoint(req, res, dbPath);
-    return;
-  }
   res.writeHead(200, { "Content-Type": "text/html" });
   res.end(indexHtml);
 });
@@ -116,7 +108,6 @@ function shutdown(): void {
   }
   ws.stop();
   server.close();
-  closeDb();
   process.exit(0);
 }
 

@@ -1,15 +1,16 @@
-# Cool Eva
+# Energica-online , originally by Danieltroger.
+Logging an Graphana is cut out from this live-only project.
 
-Telemetry for a **watercooled 2021 Energica Eva Ribelle**. A Raspberry Pi inside the bike logs the temperatures of a custom watercooling loop on the battery pack, **plus** the bike's own battery / charge / cell / drive telemetry read straight off the CAN bus — all into one SQLite database, surfaced as a live phone dashboard and a Grafana dashboard for post-ride analysis.
+Telemetry for a **2022 Energica Eva Ribelle**. A Raspberry Pi inside the bike logs the temperatures of a custom watercooling loop on the battery pack, **plus** the bike's own battery / charge / cell / drive telemetry read straight off the CAN bus — all into one SQLite database, surfaced as a live phone dashboard and a Grafana dashboard for post-ride analysis.
 
 ## Hardware & setup
 
-- **Raspberry Pi Zero 2 W** running the app as a `systemd` service (Node.js, runs as root).
-- **2× MAX31865 + PT100 probes** over SPI — coolant **in** and **out** of the custom battery watercooling loop.
+- **Raspberry Pi Zero 2 W** running the app as a `systemd` service (Node.js, runs as root). (The project on my actualy bike is an old Zero W with a node 22)
+ but the development here is on a pi 5.
 - **[8devices Korlan USB2CAN](https://shop.8devices.com/usb2can/korlan/)** plugged into the bike's OBD port → `can0` (in-kernel `usb_8dev`, no driver install). 500 kbit, 11-bit. The app reads broadcast frames _and_ actively polls standard OBD-II PIDs (**read-only** — no diagnostic writes).
-- **Networking:** the Pi joins my **phone's hotspot**, so it's reachable at **`http://cool-eva.local`** from the phone's browser. It's a bit janky (have to open hotspot page in phone settings for ~20s at the start of every ride), but it works for an at-a-glance dash while riding/charging.
+- **Networking:** The Pi is connected via a Huawei USB modem 4G and I can connect from any browser directly to the dashboard on the pi through Cloudflare.
 
-## What it logs
+## What it logs (Logging is disabled and cut out from this version)
 
 Everything is logged **on change** (so steady values don't spam the DB) into a small SQLite database.
 

@@ -76,8 +76,8 @@ export function record(key: string, value: number, ts: number = Date.now()): voi
   if (prev === undefined || Math.abs(value - prev) > deadband) {
     lastLogged.set(key, value);
     if (LOGGING_ENABLED) {
-  recordReading(ts, key, value, unit, group, def?.source ?? "stream");
-}
+      recordReading(ts, key, value, unit, group, def?.source ?? "stream");
+    }
     notifyChange(key, { value, unit, group, ts });
   }
 }

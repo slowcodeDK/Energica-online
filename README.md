@@ -1,6 +1,6 @@
 # Cool Eva
 
-***Whatever you read heres is from the original author. I have just modified the project to work with cloudflare so that I could view the status on my bike over the internet form any web browser. I disabled logging and databases and Graphana to spare my old Pi zero for the processing power. This is only for live values.***
+**_Whatever you read heres is from the original author. I have just modified the project to work with cloudflare so that I could view the status on my bike over the internet form any web browser. I disabled logging and databases and Graphana to spare my old Pi zero for the processing power. This is only for live values._**
 
 Telemetry for a **watercooled 2021 Energica Eva Ribelle**. A Raspberry Pi inside the bike logs the temperatures of a custom watercooling loop on the battery pack, **plus** the bike's own battery / charge / cell / drive telemetry read straight off the CAN bus — all into one SQLite database, surfaced as a live phone dashboard and a Grafana dashboard for post-ride analysis.
 
